@@ -8,6 +8,13 @@ var lifeline2,lifeline2Image;
 var ballGroup;
 var rand;
 var score=0;
+
+var devil1, devil2;
+var devil1Group, devil2Group;
+var play = 1 ;
+var end = 0 ; 
+
+var gameState = play ;
 function preload(){
   ball1Image=loadImage("images/9-ball.png")
   ball2Image=loadImage("images/ball.png")
@@ -28,6 +35,8 @@ function setup(){
   lifeline2.addImage("lifeline1",lifeline1Image);
   lifeline2.scale=0.4;
   ballGroup=new Group();
+  devil1Group =new Group();
+  devil2Group = new Group();
 }
 
 
@@ -43,21 +52,36 @@ function draw(){
   edges=createEdgeSprites();
   player.bounce(edges);
   balls();
-  // if(player.isTouching(ballGroup)&& rand===2 ){
-  //   lifeline1.destroy();
-  //   ballGroup.destroyEach();
-  //   ball.velocityY=0;
-  //   }
+ 
     
   drawSprites();
-  // var scorerand=Math.round(random(1,5))
-  //   if(scorerand===1){
-     // ball.addImage(ball1Image)
+ 
       if(player.isTouching(ballGroup) ){
         score=score+5;
         console.log(score);
       }
-    //}
+    
+
+    devils();
+    if(player.isTouching(devil1Group) ) {
+     
+      lifeline1.destroy();
+     
+      devil1Group.destroyEach();
+      devil1Group.velocityY = 0 ;
+      devil1Group.visibile = false;
+     
+    }
+    if(player.isTouching(devil2Group)) {
+     
+      lifeline1.destroy();
+      lifeline2.destroy();
+   
+      devil2Group.destroyEach();
+      devil1Group.velocityY = 0 ;
+      devil1Group.visibile = false;
+     
+    }
   textSize(30);
   text("score:"+Math.round(score/7),700,30);
 }
@@ -67,31 +91,38 @@ function balls(){
     ball.velocityY=+5;
     player.depth=ball.depth;
     ballGroup.add(ball)
-     rand = Math.round(random(1,5));
+     rand = Math.round(random(1,3));
     switch(rand) {
       case 1: ball.addImage(ball1Image);
               break;
-      case 2: ball.addImage(ball2Image);
-      ball.scale=0.7;
-      ball.debug=true;
-              break;
-      case 3: ball.addImage(ball3Image);
+             
+      case 2: ball.addImage(ball3Image);
         ball.scale=0.7;
               break;
-      case 4: ball.addImage(ball4Image);
-              break;
-      case 5: ball.addImage(ball5Image);
+    
+      case 3: ball.addImage(ball5Image);
               break;
       default: break;
     }
     
   }
 
-  
-  
-
-
 }
-function devil(){
-  
+function devils(){
+  if(frameCount%100===0){
+    devil1=createSprite(random(70,displayWidth-200),0,40,40);
+    devil1.addImage("devil1", ball2Image);
+    devil1.scale = 0.6;
+    devil1.velocityY=5;
+    devil1Group.add(devil1);
+
+    
+
+    devil2=createSprite(random(120,displayWidth-200),0,40,40);
+    devil2.addImage("devil2",  ball4Image);
+    devil2.velocityY=4;
+    devil2.scale = 0.8;
+    devil2Group.add(devil2);
+
+  }
 }
